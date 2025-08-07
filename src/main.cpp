@@ -4,42 +4,57 @@
 
 const int mapWidth=24;
 const int mapHeight=24;
+
 const int screenWidth=1280;
 const int screenHeight=720;
 
+//const int texWidth = 64;
+//const int texHeight = 64;
+const int texture_size = 512;
+const int texture_wall_size = 64;
+
 int worldMap[mapWidth][mapHeight]=
 {
-  {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,2,2,2,2,2,0,0,0,0,3,0,3,0,3,0,0,0,1},
-  {1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,3,0,0,0,3,0,0,0,1},
-  {1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,2,2,0,2,2,0,0,0,0,3,0,3,0,3,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,0,0,0,0,5,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,0,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
+  {4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,7,7,7,7,7,7,7,7},
+  {4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,7},
+  {4,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7},
+  {4,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7},
+  {4,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,7},
+  {4,0,4,0,0,0,0,5,5,5,5,5,5,5,5,5,7,7,0,7,7,7,7,7},
+  {4,0,5,0,0,0,0,5,0,5,0,5,0,5,0,5,7,0,0,0,7,7,7,1},
+  {4,0,6,0,0,0,0,5,0,0,0,0,0,0,0,5,7,0,0,0,0,0,0,8},
+  {4,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,7,7,1},
+  {4,0,8,0,0,0,0,5,0,0,0,0,0,0,0,5,7,0,0,0,0,0,0,8},
+  {4,0,0,0,0,0,0,5,0,0,0,0,0,0,0,5,7,0,0,0,7,7,7,1},
+  {4,0,0,0,0,0,0,5,5,5,5,0,5,5,5,5,7,7,7,7,7,7,7,1},
+  {6,6,6,6,6,6,6,6,6,6,6,0,6,6,6,6,6,6,6,6,6,6,6,6},
+  {8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4},
+  {6,6,6,6,6,6,0,6,6,6,6,0,6,6,6,6,6,6,6,6,6,6,6,6},
+  {4,4,4,4,4,4,0,4,4,4,6,0,6,2,2,2,2,2,2,2,3,3,3,3},
+  {4,0,0,0,0,0,0,0,0,4,6,0,6,2,0,0,0,0,0,2,0,0,0,2},
+  {4,0,0,0,0,0,0,0,0,0,0,0,6,2,0,0,5,0,0,2,0,0,0,2},
+  {4,0,0,0,0,0,0,0,0,4,6,0,6,2,0,0,0,0,0,2,2,0,2,2},
+  {4,0,6,0,6,0,0,0,0,4,6,0,0,0,0,0,5,0,0,0,0,0,0,2},
+  {4,0,0,5,0,0,0,0,0,4,6,0,6,2,0,0,0,0,0,2,2,0,2,2},
+  {4,0,6,0,6,0,0,0,0,4,6,0,6,2,0,0,5,0,0,2,0,0,0,2},
+  {4,0,0,0,0,0,0,0,0,4,6,0,6,2,0,0,0,0,0,2,0,0,0,2},
+  {4,4,4,4,4,4,4,4,4,4,1,1,1,2,2,2,2,2,2,3,3,3,3,3}
 };
 
-bool canMove(int x, int y){
-    if(x<0||x>mapWidth||y<0||y>mapHeight){
+bool canMove(sf::Vector2f position, sf::Vector2f size){
+    sf::Vector2i upper_left(position - size / 2.0f);
+    sf::Vector2i lower_right(position + size / 2.0f);
+    if(upper_left.x < 0 || upper_left.y < 0 || lower_right.x >= mapWidth || lower_right.y >= mapHeight){
         return false;
     }
-    return worldMap[x][y]==0;
+    for(int x = upper_left.x; x <= lower_right.x; x++){
+        for(int y = upper_left.y; y <= lower_right.y; y++){
+            if(worldMap[x][y] != 0){
+                return false;
+            }
+        }
+    }
+    return true;
 }
 
 sf::Vector2f rotate(sf::Vector2f vec, float val){
@@ -51,9 +66,20 @@ sf::Vector2f rotate(sf::Vector2f vec, float val){
 
 int main(){
 
-    sf::Vector2f pos(22, 12);
+    sf::Texture texture;
+    if(!texture.loadFromFile("Z:/Programming Projects/raycaster/data/wolftextures.png")){
+        std::cout << "Cannot open texture from file!\n";
+        return EXIT_FAILURE;
+    }
+
+    sf::RenderStates state(&texture);
+
+    sf::Vector2f pos(22, 11.5);
     sf::Vector2f dir(-1, 0);
     sf::Vector2f plane(0, 0.66);
+
+    float size_f = 0.375f;
+    sf::Vector2f size(size_f, size_f);
 
     double time = 0;
     double oldTime = 0;
@@ -91,10 +117,10 @@ int main(){
 
         if(moveForward != 0.0f){
             sf::Vector2f moveVec = dir * moveForward * moveSpeed * dt;
-            if(canMove(pos.x + moveVec.x, pos.y)){
+            if(canMove(sf::Vector2f(pos.x + moveVec.x, pos.y), size)){
                 pos.x += moveVec.x;
             }
-            if(canMove(pos.x, pos.y + moveVec.y)){
+            if(canMove(sf::Vector2f(pos.x, pos.y + moveVec.y), size)){
                 pos.y += moveVec.y;
             }
         }
@@ -178,32 +204,48 @@ int main(){
             int drawEnd = lineHeight / 2 + screenHeight / 2;
             if(drawEnd>=screenHeight)drawEnd = screenHeight;
 
-            sf::Color color;
+            int texNum = worldMap[map.x][map.y] - 1;
 
-            switch(worldMap[map.x][map.y]){
-                case 1:color=sf::Color::Red;break;
-                case 2:color=sf::Color::Green;break;
-                case 3:color=sf::Color::Blue;break;
-                case 4:color=sf::Color::White;break;
-                default:color=sf::Color::Yellow;break;
+            sf::Vector2i textureCoords(
+                    texNum * texture_wall_size % texture_size,
+                    texNum * texture_wall_size / texture_size * texture_wall_size
+            );
+
+            double wallX;
+            if(side == 0){
+                wallX = pos.y + perpWallDist * rayDir.y;
             }
+            else{
+                wallX = pos.x + perpWallDist * rayDir.x;
+            }
+            wallX = wallX - floor(wallX);
+
+            int texX = (int)(wallX * (double)texture_wall_size);
+            if((side == 0 && rayDir.x > 0) || (side == 1 && rayDir.y < 0)){
+                texX = texture_wall_size - texX - 1;
+            }
+            textureCoords.x += texX;
+
+            sf::Color color = sf::Color::White;
 
             if(side){
-                color.r/=2;
-                color.g/=2;
-                color.b/=2;
+                color.r /= 2;
+                color.g /= 2;
+                color.b /= 2;
             }
             
-            lines[x*2].position = sf::Vector2f((float)x, (float)drawStart);
-            lines[x*2].color = color;
+            lines[x * 2].position = sf::Vector2f((float)x, (float)drawStart);
+            lines[x * 2].color = color;
+            lines[x * 2].texCoords = sf::Vector2f((float)textureCoords.x, (float)textureCoords.y);
 
-            lines[x*2+1].position = sf::Vector2f((float)x, (float)drawEnd);
-            lines[x*2+1].color = color;
+            lines[x * 2 + 1].position = sf::Vector2f((float)x, (float)drawEnd);
+            lines[x * 2 + 1].color = color;
+            lines[x * 2 + 1].texCoords = sf::Vector2f((float)textureCoords.x, (float)textureCoords.y + texture_wall_size - 1);
 
         }
 
         window.clear();
-        window.draw(lines);
+        window.draw(lines, state);
         window.display();
     }
 }
