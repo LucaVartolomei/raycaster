@@ -8,8 +8,8 @@ const int mapHeight=24;
 const int screenWidth=1280;
 const int screenHeight=720;
 
-//const int texWidth = 64;
-//const int texHeight = 64;
+const int texWidth = 64;
+const int texHeight = 64;
 const int texture_size = 512;
 const int texture_wall_size = 64;
 
@@ -72,6 +72,19 @@ int main(){
         return EXIT_FAILURE;
     }
 
+    sf::Image floorTex;
+    sf::Image ceilingTex;
+
+    if(!floorTex.loadFromFile("Z:/Programming Projects/raycaster/data/greystone.png")){
+        std::cout << "Cannot open texture from file!\n";
+        return EXIT_FAILURE;
+    }
+
+    if(!ceilingTex.loadFromFile("Z:/Programming Projects/raycaster/data/wood.png")){
+        std::cout << "Cannot open texture from file!\n";
+        return EXIT_FAILURE;
+    }
+
     sf::RenderStates state(&texture);
 
     sf::Vector2f pos(22, 11.5);
@@ -86,6 +99,8 @@ int main(){
 
     sf::VertexArray lines(sf::PrimitiveType::Lines, 2*screenWidth);
 
+    sf::VertexArray pixelArray(sf::PrimitiveType::Points, screenHeight * screenWidth);
+
     float moveSpeed = 5.0f;
     float rotationSpeed = 2.0f;
 
@@ -93,6 +108,8 @@ int main(){
     window.setFramerateLimit(30);
 
     sf::Clock clock;
+
+    sf::Texture aux;
 
     while (window.isOpen())
     {
@@ -138,6 +155,49 @@ int main(){
             float rotation = rotationSpeed * rotateDir * dt;
             dir = rotate(dir, rotation);
             plane = rotate(plane, rotation);
+        }
+
+        sf::Image screenBuffer(sf::Vector2u(screenWidth, screenHeight), sf::Color::Black);
+
+        for(int y = 0; y < screenHeight; y++){
+            sf::Vector2f rayDir0 = dir - plane;
+            sf::Vector2f rayDir1 = dir + plane;
+
+            int p = y - screenHeight / 2;
+
+            float posZ = 0.30f * screenHeight;
+
+            float rowDistance = posZ / p;
+
+            float floorStepX = rowDistance * (rayDir1.x - rayDir0.x) / screenHeight;
+            float floorStepY = rowDistance * (rayDir1.y - rayDir0.y) / screenHeight;
+            rowDistance=rowDistance*1.78;
+            sf::Vector2f floor = pos + rowDistance * rayDir0;
+
+            for(int x = 0; x < screenWidth; x++){
+                sf::Vector2i cell((int)floor.x, (int)floor.y);
+
+                int tx = (int)(texWidth * (floor.x - cell.x)) & (texWidth - 1);
+                int ty = (int)(texHeight * (floor.y - cell.y)) & (texHeight - 1);
+
+                floor.x += floorStepX;
+                floor.y += floorStepY;
+
+                sf::Color floorColor = floorTex.getPixel(sf::Vector2u(tx, ty));
+                floorColor.r /= 2, floorColor.g /= 2, floorColor.b /= 2;
+                int index = y * screenWidth + x;
+                pixelArray[index].position = sf::Vector2f(x, y);
+                pixelArray[index].color = floorColor;
+
+                sf::Color ceilingColor = ceilingTex.getPixel(sf::Vector2u(tx, ty));
+                ceilingColor.r /= 2, ceilingColor.g /= 2, ceilingColor.b /= 2;
+                index = (screenHeight-y-1) * screenWidth + x;
+                pixelArray[index].position = sf::Vector2f(x, screenHeight-y-1);
+                pixelArray[index].color = ceilingColor;
+
+                screenBuffer.setPixel(sf::Vector2u(x, y), floorColor);
+                screenBuffer.setPixel(sf::Vector2u(x, screenHeight-y-1), ceilingColor);
+            }
         }
 
         for(int x = 0; x < screenWidth; x++){
@@ -244,7 +304,14 @@ int main(){
 
         }
 
+        sf::Texture tx;
+        tx.loadFromImage(screenBuffer);
+        
+        sf::Sprite auxx(tx);
+
         window.clear();
+        //window.draw(auxx);
+        window.draw(pixelArray);
         window.draw(lines, state);
         window.display();
     }
